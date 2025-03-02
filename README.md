@@ -4,14 +4,12 @@ Tento projekt je jednoduchý správce úkolů, který ukládá jednotlivé úkol
 
 ## Struktura souborů
 
-```
 projekt_ukoly/
 │-- main.py          # Hlavní soubor pro práci s úkoly
 │-- database.py      # Připojení k MySQL a inicializace tabulky
 │-- test_ukoly.py    # Testy pro funkce
 │-- requirements.txt # Seznam potřebných knihoven
 │-- README.md        # Dokumentace k projektu
-```
 
 ## 1. Instalace a spuštění projektu
 
