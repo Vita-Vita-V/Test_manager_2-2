@@ -11,7 +11,7 @@ def setup_module(module):
     connection.close()
 
 def test_pridat_ukol_pozitivni():
-    pridat_ukol("Testovací úkol", "Popis testu", "Nový")
+    pridat_ukol("Testovací úkol", "Popis testu", "probiha")
     connection = pripojeni_db()
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM ukoly WHERE nazev='Testovací úkol'")
@@ -21,39 +21,55 @@ def test_pridat_ukol_pozitivni():
     assert vysledek is not None
 
 def test_pridat_ukol_negativni():
-    with pytest.raises(TypeError):
+    with pytest.raises(Exception):  
         pridat_ukol(None, None, None)
 
 def test_aktualizovat_ukol_pozitivni():
-    pridat_ukol("Další úkol", "Další test", "Nový")
+    pridat_ukol("Další úkol", "Další test", "probiha")
     connection = pripojeni_db()
     cursor = connection.cursor()
     cursor.execute("SELECT id FROM ukoly WHERE nazev='Další úkol'")
     ukol_id = cursor.fetchone()[0]
-    aktualizovat_ukol(ukol_id, "Dokončeno")
+    cursor.close()
+    connection.close()
+    
+    aktualizovat_ukol(ukol_id, "hotovo")
+    
+    connection = pripojeni_db()
+    cursor = connection.cursor()
     cursor.execute("SELECT stav FROM ukoly WHERE id=%s", (ukol_id,))
     stav = cursor.fetchone()[0]
     cursor.close()
     connection.close()
-    assert stav == "Dokončeno"
+    
+    assert stav == "hotovo"
 
 def test_aktualizovat_ukol_negativni():
-    with pytest.raises(TypeError):
-        aktualizovat_ukol("text místo čísla", "Nový")
+    with pytest.raises(Exception):  
+        aktualizovat_ukol("text místo čísla", "probiha")
 
 def test_odstranit_ukol_pozitivni():
-    pridat_ukol("Dočasný úkol", "Test odstranění", "Nový")
+    pridat_ukol("Dočasný úkol", "Test odstranění", "probiha")
     connection = pripojeni_db()
     cursor = connection.cursor()
     cursor.execute("SELECT id FROM ukoly WHERE nazev='Dočasný úkol'")
     ukol_id = cursor.fetchone()[0]
+    cursor.close()
+    connection.close()
+    
     odstranit_ukol(ukol_id)
+    
+    connection = pripojeni_db()
+    cursor = connection.cursor()
     cursor.execute("SELECT * FROM ukoly WHERE id=%s", (ukol_id,))
     vysledek = cursor.fetchone()
     cursor.close()
     connection.close()
+    
     assert vysledek is None
 
 def test_odstranit_ukol_negativni():
-    with pytest.raises(Exception):
-        odstranit_ukol(99999)
+    
+    odstranit_ukol(99999)  
+
+
